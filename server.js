@@ -6,11 +6,11 @@ if(process.env.NODE_ENV !== 'production') {
 const express = require('express')
 const app = express()
 const expressLayouts = require('express-ejs-layouts')
-const methodOverrite = require('method-override')
+const methodOverride = require('method-override')
 
 //import routes
-const authorizeRoute = require('routes/authorize')
-const userRoute = require('routes/user')
+const authorizeRouter = require('./routes/authorize')
+const userRouter = require('./routes/user')
 
 //setup views
 app.set('view engine'. ejs)
@@ -30,5 +30,7 @@ db.on('error', error => console.error(error))
 db.once('open', () => console.log('Connected to Mongoose'))
 
 //setup routers
-app.use('/', authorRouter)
+app.use('/', authorizeRouter)
 app.use('/user', userRouter)
+
+app.listen(process.env.PORT || 3000)
