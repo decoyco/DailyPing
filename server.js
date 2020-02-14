@@ -23,7 +23,7 @@ const userRouter = require('./routes/user')
 app.set('view engine', 'ejs')
 app.use(flash())
 app.use(session( {
-    secret: 'we9r8mt79w0eryt98sdfmus98eru093y45209345y092kjwerwerg9784609521',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false
 }))
