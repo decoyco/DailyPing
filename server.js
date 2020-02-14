@@ -4,7 +4,7 @@ if(process.env.NODE_ENV !== 'production') {
 
 //import libraries
 const express = require('express')
-//const flash = require('express-flash')
+const flash = require('express-flash')
 const session = require('express-session')
 const app = express()
 const expressLayouts = require('express-ejs-layouts')
@@ -21,7 +21,7 @@ const userRouter = require('./routes/user')
 
 //setup views
 app.set('view engine', 'ejs')
-//app.use(flash())
+app.use(flash())
 app.use(session( {
     secret: process.env.SESSION_SECRET,
     resave: false,
