@@ -13,6 +13,14 @@ const User = require('./models/user')
 const Reminder = require('./models/reminder')
 const bodyParser = require('body-parser')
 const passport = require('passport')
+const nodemailer = require('nodemailer')
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'dailyping.noreply@gmail.com',
+      pass: 'hitmanr3b0rn'
+    }
+  });
 
 
 //import routes
@@ -53,15 +61,46 @@ app.use('/login', loginRouter)
 app.use('/register', registerRouter)
 //app.use('/reminder', reminderRouter)
 
+
 setInterval(sendReminder, 60000)
 async function sendReminder()
 {
-    const d = new Date(Date.now())
-    const minutes = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes()
-    const time_now = d.getHours() + '' + minutes;
-    let query = await Reminder.find({time: time_now}).exec()
-    query.forEach(reminder => {
-        console.log(reminder.message)
-    });
+    let request = require('request');
+    const apiKey = 'c2827fcb20faeea22f693363ce34f18d'
+    try
+    {
+        const d = new Date(Date.now())
+        const minutes = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes()
+        const time_now = d.getHours() + '' + minutes;
+        let query = await Reminder.find({time: time_now, enabled: true}).exec()
+        query.forEach(reminder => {
+            let url = `http://api.openweathermap.org/data/2.5/weather?q=${reminder.location}&units=imperial&appid=${apiKey}`
+            const rainy, windy, cloudy, clear, temperature
+            request(url, function (err, response, body) {
+                if(err){
+                  console.log('error:', error);
+                } else {
+                  let weather = JSON.parse(body)
+                  //USE weather TO TEST FOR CONDITIONS HERE!
+                }
+              });
+            transporter.sendMail({
+                from: 'dailyping.noreply@gmail.com',
+                to: reminder.email,
+                subject: 'Your DailyPing Reminder!',
+                text: reminder.message
+            }, function(error, info){
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log('Email sent: ' + info.response);
+                }
+              });
+        });
+    }
+    catch(e)
+    {
+        console.log(e)
+    }
 }
 app.listen(process.env.PORT || 3000)
