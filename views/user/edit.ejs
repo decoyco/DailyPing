@@ -1,0 +1,19 @@
+<h2>EDIT</h2>
+<form action="/edit?_method=PUT" method="POST">
+    <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="<%= user.email%>">
+    </div>
+    <div>
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" value="<%= user.name%>">
+    </div>
+    <div>
+        <label for="Location">Location</label>
+        <input type="text" id="location" name="location" value="<%= user.location%>">
+    </div>
+    <div>
+        <a href="/">Cancel</a>
+        <button type="submit">Update</button>
+    </div>
+</form>

@@ -14,10 +14,9 @@ router.get('/', checkNotAuthenticated, (req,res) =>
 router.post('/', checkNotAuthenticated, async (req,res) =>
 {
     try {
-        const s = req.body.username
         const hashPassword = await bcrypt.hash(req.body.password, 10)
         const user = new User({
-            username: req.body.username,
+            name: req.body.name,
             email: req.body.email,
             password: hashPassword
         })

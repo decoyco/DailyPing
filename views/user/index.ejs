@@ -1,0 +1,58 @@
+<h2>Home</h2>
+<div>
+    <text>Name: <%= user.name%></text>
+    <a href="/edit">Edit Profile</a>
+</div>
+<div>
+    <text>Email: <%= user.email%></text>
+</div>
+<div>
+    <text>Location: <%= user.location != null ? user.location : "NOT YET PROVIDED"%></text>
+</div>
+<div>
+    <label>Reminders:</label>
+    <% reminders.forEach(reminder => { %>
+        <div>
+            <text>Message: <%= reminder.message %> </text>
+            <text>Time: <%= reminder.time%> </text>
+            <text>Enabled: <%= reminder.enabled %> </text>
+            <form action="/<%= reminder.id%>?_method=DELETE" method="POST">
+                <button type="submit">Delete</button>
+            </form>
+        </div>
+    <%})%>
+    <div>
+        <form action="/" method="POST">
+            <label>Message:</label>
+            <input type="text" name="message">
+            <label>Time:</label>
+            <input type="time" name="time">
+            <label>Conditions</label>
+                <input type="checkbox" name="rainy">
+                <label for="rainy">Rainy</label>
+                <input type="checkbox" name="windy">
+                <label for="windy">Windy</label>
+                <input type="checkbox" name="cloudy">
+                <label for="cloudy">Cloudy</label>
+                <input type="checkbox" name="clear">
+                <label for="clear">Clear</label>
+                <input type="checkbox" name="temperature">
+                <label id="tempBox" for="temperature">Temperature</label>
+                    <div id="tempOptions">
+                        <select name="temp_compare">
+                            <option  value="greaterThan">Greater Than</option>
+                            <option  value="lessThan">Less Than</option>
+                        </select>
+                        <input type="number" name="temp_value">
+                        <select name="temp_type">
+                            <option  value="F">F</option>
+                            <option  value="C">C</option>
+                        </select>
+                    </div>
+            <input type="checkbox" name="enabled">
+            <label for="enabled">Enabled</label>
+            <button type="submit">Add</button>
+        </form>
+    </div>
+</div>
+<%- include('../partials/footer') %>

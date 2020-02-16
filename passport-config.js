@@ -30,13 +30,21 @@ function initialize(passport, getUserById)
     passport.use(new LocalStrategy({ usernameField: 'email'},
     authenticateUser))
 
-    passport.serializeUser((user, done) => {
-        done(null, user.id)
-    })
+    passport.serializeUser(function (user, done) {
+        done(null, user.id);
+    });
+    passport.deserializeUser(function (user, done) {
+        //If using Mongoose with MongoDB; if other you will need JS specific to that schema.
+        User.findById(user, function (err, user) {
+            done(err, user);
+        });
+    });
 
-    passport.deserializeUser((user, done) => {
-        return done(null, user)
-    })
+    // passport.deserializeUser(function (user,done) {
+    //     const new_user = User.findOne({_id: user.id})
+    //     console.log(new_user)
+    //     done(null, new_user)
+    // })
 }
 
 module.exports = initialize
