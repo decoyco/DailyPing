@@ -56,7 +56,7 @@ router.post('/',checkAuthenticated, async (req,res) =>
     weather.setCity(req.user.location)
     weather.getAllWeather(async function(err, currentWeather)
     {
-        var utc_time = new moment('2020-02-17 ' +req.body.time+":00").utcOffset(currentWeather.timezone/3600)
+        var utc_time = new moment('2020-02-17 ' +req.body.time+":00")//.utcOffset(currentWeather.timezone/3600)
         console.log(currentWeather.timezone)
         console.log(utc_time.format())
         console.log(utc_time.utc().format())
