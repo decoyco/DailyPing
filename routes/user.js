@@ -56,9 +56,11 @@ router.post('/',checkAuthenticated, async (req,res) =>
     weather.getAllWeather(async function(err, currentWeather)
     {
         var utc_time = new moment('2020-02-17 ' +req.body.time+":00").utcOffset(currentWeather.timezone/3600)
+        console.log(utc_time.utc().format())
         const hour = utc_time.utc().hours() >= 10 ? utc_time.utc().hours() : '0'+utc_time.utc().hours()
         const minute = utc_time.utc().minutes() >= 10 ? utc_time.utc().minutes() : '0'+utc_time.utc().minutes()
         const _utc_time = hour + '' + minute;
+        console.log(_utc_time)
         const temp_compare = req.body.temp_compare == "greaterThan" ? ">" : "<"
         const _value = parseFloat(req.body.temp_value)
         const temp_value = req.body.temp_type == "F" ? (_value - 32) / 1.8 : _value
