@@ -15,7 +15,9 @@
         <div>
             <text>Message: <%= reminder.message %> </text>
             <text>Time: <%= reminder.time%> </text>
-            <text>Enabled: <%= reminder.enabled %> </text>
+            <form action="/reminder/<%= reminder.id%>/enable?_method=PUT" method="POST">
+                <button type="submit"><% if(reminder.enabled) {%> Enabled <%} else { %> Disabled <%}%></button>
+            </form>
             <form action="/reminder/<%= reminder.id%>?_method=DELETE" method="POST">
                 <button type="submit">Delete</button>
             </form>

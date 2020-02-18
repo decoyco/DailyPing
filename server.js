@@ -66,7 +66,7 @@ app.use('/register', registerRouter)
 app.use('/reminder', reminderRouter)
 
 //60000
-setInterval(sendReminder, 15000)
+setInterval(sendReminder, 60000)
 async function sendReminder()
 {
     try
@@ -152,7 +152,6 @@ async function sendReminder()
                     console.log('Email sent: ' + info.response);
                   }
                 });
-              //console.log("sending")
             }
           })
       })
