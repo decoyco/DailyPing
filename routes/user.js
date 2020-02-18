@@ -2,6 +2,12 @@ const express = require('express')
 const router = express.Router()
 const User = require('../models/user')
 const Reminder = require('../models/reminder')
+var moment = require('moment')
+moment().format();
+const weather = require('openweather-apis')
+weather.setLang('en')
+weather.setAPPID('c2827fcb20faeea22f693363ce34f18d')
+weather.setUnits('metric')
 
 router.get('/', checkAuthenticated, async (req,res) =>
 {
@@ -35,21 +41,6 @@ router.put('/edit', checkAuthenticated, async (req,res) =>
     }
 })
 
-router.delete('/:id', async (req,res) =>
-{
-    try
-    {
-        const reminder = await Reminder.findById(req.params.id);
-        await reminder.remove()
-        res.redirect('/')
-    }
-    catch(e)
-    {
-        const reminders = await Reminder.find({})
-        res.render('/', {user: req.user, reminders: reminders, errorMessage: `Error Deleting Reminder`})
-    }
-})
-
 router.delete('/logout',(req, res) =>
 {
     req.logOut()
@@ -58,43 +49,54 @@ router.delete('/logout',(req, res) =>
 
 router.post('/',checkAuthenticated, async (req,res) =>
 {
-    const _time = req.body.time.replace(":", "")
-    const temp_compare = req.body.temp_compare == "greaterThan" ? ">" : "<"
-    const _value = parseFloat(req.body.temp_value)
-    const temp_value = req.body.temp_type == "F" ? (_value - 32) / 1.8 : _value
-    const temperature_condition = temp_compare + ' ' + temp_value
-    const rainy = req.body.rainy == "on" ? true : false
-    const windy = req.body.windy == "on" ? true : false
-    const cloudy = req.body.cloudy == "on" ? true : false
-    const clear = req.body.clear == "on" ? true : false
-    const temperature = req.body.temperature == "on" ? true : false
-    const enabled = req.body.enabled == "on" ? true : false
-    const reminder = new Reminder(
+    const time = req.body.time.split(':')
+    const hour = time[0]
+    const minute = time[1]
+    weather.setCity(req.user.location)
+    weather.getAllWeather(async function(err, currentWeather)
     {
-        message: req.body.message,
-        time: _time,
-        rainy: rainy,
-        windy: windy,
-        cloudy: cloudy,
-        clear: clear,
-        temperature: temperature,
-        temperature_condition: temperature_condition,
-        enabled: enabled,
-        location: req.user.location,
-        associatedUserId: req.user.id,
-        email: req.user.email
+        var utc_time = new moment('2020-02-17 ' +req.body.time+":00").utcOffset(currentWeather.timezone/3600)
+        const hour = utc_time.utc().hours() >= 10 ? utc_time.utc().hours() : '0'+utc_time.utc().hours()
+        const minute = utc_time.utc().minutes() >= 10 ? utc_time.utc().minutes() : '0'+utc_time.utc().minutes()
+        const _utc_time = hour + '' + minute;
+        const temp_compare = req.body.temp_compare == "greaterThan" ? ">" : "<"
+        const _value = parseFloat(req.body.temp_value)
+        const temp_value = req.body.temp_type == "F" ? (_value - 32) / 1.8 : _value
+        const temperature_condition = temp_compare + ' ' + temp_value
+        const rainy = req.body.rainy == "on" ? true : false
+        const windy = req.body.windy == "on" ? true : false
+        const cloudy = req.body.cloudy == "on" ? true : false
+        const clear = req.body.clear == "on" ? true : false
+        const temperature = req.body.temperature == "on" ? true : false
+        const enabled = req.body.enabled == "on" ? true : false
+        const reminder = new Reminder(
+        {
+            message: req.body.message,
+            time: req.body.time,
+            utc_time: _utc_time,
+            rainy: rainy,
+            windy: windy,
+            cloudy: cloudy,
+            clear: clear,
+            temperature: temperature,
+            temperature_condition: temperature_condition,
+            enabled: enabled,
+            location: req.user.location,
+            associatedUserId: req.user.id,
+            email: req.user.email
+        })
+        try
+        {
+            await reminder.save()
+            res.redirect('/')
+        }
+        catch(e)
+        {
+            console.log(e)
+            let reminders = await Reminder.find({email: req.user.email})
+            res.render('user/index', {user: req.user, errorMessage: `Error adding reminder`, reminders: reminders})
+        }
     })
-    try
-    {
-        await reminder.save()
-        res.redirect('/')
-    }
-    catch(e)
-    {
-        console.log(e)
-        let reminders = await Reminder.find({email: req.user.email})
-        res.render('user/index', {user: req.user, errorMessage: `Error adding reminder`, reminders: reminders})
-    }
 })
 
 function checkAuthenticated(req,res,next)

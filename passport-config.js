@@ -39,12 +39,6 @@ function initialize(passport, getUserById)
             done(err, user);
         });
     });
-
-    // passport.deserializeUser(function (user,done) {
-    //     const new_user = User.findOne({_id: user.id})
-    //     console.log(new_user)
-    //     done(null, new_user)
-    // })
 }
 
 module.exports = initialize

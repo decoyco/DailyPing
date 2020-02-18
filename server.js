@@ -21,13 +21,17 @@ var transporter = nodemailer.createTransport({
       pass: 'hitmanr3b0rn'
     }
   });
+const weather = require('openweather-apis')
+weather.setLang('en')
+weather.setAPPID('c2827fcb20faeea22f693363ce34f18d')
+weather.setUnits('metric')
 
 
 //import routes
 const registerRouter = require('./routes/register')
 const loginRouter = require('./routes/login')
 const userRouter = require('./routes/user')
-//const reminderRouter = require('./routes/reminder')
+const reminderRouter = require('./routes/reminder')
 
 //setup views
 app.set('view engine', 'ejs')
@@ -59,48 +63,103 @@ db.once('open', () => console.log('Connected to Mongoose'))
 app.use('/', userRouter)
 app.use('/login', loginRouter)
 app.use('/register', registerRouter)
-//app.use('/reminder', reminderRouter)
+app.use('/reminder', reminderRouter)
 
-
-setInterval(sendReminder, 60000)
+//60000
+setInterval(sendReminder, 15000)
 async function sendReminder()
 {
-    let request = require('request');
-    const apiKey = 'c2827fcb20faeea22f693363ce34f18d'
     try
     {
         const d = new Date(Date.now())
-        const minutes = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes()
-        const time_now = d.getHours() + '' + minutes;
-        let query = await Reminder.find({time: time_now, enabled: true}).exec()
-        query.forEach(reminder => {
-            let url = `http://api.openweathermap.org/data/2.5/weather?q=${reminder.location}&units=imperial&appid=${apiKey}`
-            const rainy, windy, cloudy, clear, temperature
-            request(url, function (err, response, body) {
-                if(err){
-                  console.log('error:', error);
-                } else {
-                  let weather = JSON.parse(body)
-                  //USE weather TO TEST FOR CONDITIONS HERE!
+        const date_to_time = d.toUTCString().split(' ')[4]
+        const _date_to_time = date_to_time.split(':')
+        const time_now = _date_to_time[0] + '' + _date_to_time[1]
+        //CHECK TIME AND ENABLED
+        let query = await Reminder.find({utc_time: time_now, enabled: true}).exec()
+        query.forEach(reminder => 
+        {
+          console.log("reminder found: " + reminder.message)
+          var rainy = false, windy = false, cloudy = false, clear = false, snow = false
+          var temperatureMatch = false
+          var temp_greaterThan = false
+          var temp_testValue = 0
+          if(reminder.temperature)
+          {
+            const words = reminder.temperature_condition.split(' ')
+            if(words[0] == ">")
+              temp_greaterThan = true
+            temp_testValue = words[1]
+          }
+          weather.setCity(reminder.location)
+          weather.getAllWeather(function(err, currentWeather)
+          {
+            if(err)
+            {
+              console.log(err)
+            }
+            else
+            {
+              if(currentWeather.weather[0].id >= 801)
+              {
+                cloudy = true
+              }
+              else if (currentWeather.weather[0].id == 800)
+              {
+                clear = true
+              }
+              else if (currentWeather.weather[0].id >= 600 && currentWeather.weather[0].id <= 622)
+              {
+                snow = true
+              }
+              else if ((currentWeather.weather[0].id >= 500 && currentWeather.weather[0].id <= 531) || (currentWeather.weather[0].id >= 300 && currentWeather.weather[0].id <= 321) || (currentWeather.weather[0].id >= 200 || currentWeather.weather[0].id <= 232))
+              {
+                rainy = true
+              }
+              if(currentWeather.wind.speed > 11)
+              {
+                windy = true
+              }
+              if(reminder.temperature)
+              {
+                if(temp_greaterThan)
+                {
+                  if(currentWeather.main.temp > temp_testValue)
+                  {
+                    temperatureMatch = true
+                  }
                 }
-              });
-            transporter.sendMail({
-                from: 'dailyping.noreply@gmail.com',
-                to: reminder.email,
-                subject: 'Your DailyPing Reminder!',
-                text: reminder.message
-            }, function(error, info){
-                if (error) {
-                  console.log(error);
-                } else {
-                  console.log('Email sent: ' + info.response);
+                else
+                {
+                  if(currentWeather.main.temp < temp_testValue)
+                  {
+                    temperatureMatch = true
+                  }
                 }
-              });
-        });
-    }
-    catch(e)
-    {
-        console.log(e)
-    }
+              }
+            }
+            if((reminder.rainy && rainy) || (reminder.windy && windy) || (reminder.cloudy && cloudy) || (reminder.clear && clear) || /* (reminder.snow && snow) ||*/ temperatureMatch)
+            {
+              transporter.sendMail({
+                  from: 'dailyping.noreply@gmail.com',
+                  to: reminder.email,
+                  subject: 'Your DailyPing Reminder!',
+                  text: reminder.message
+              }, function(error, info){
+                  if (error) {
+                    console.log(error);
+                  } else {
+                    console.log('Email sent: ' + info.response);
+                  }
+                });
+              //console.log("sending")
+            }
+          })
+      })
+  }
+  catch(e)
+  {
+      console.log(e)
+  }
 }
 app.listen(process.env.PORT || 3000)

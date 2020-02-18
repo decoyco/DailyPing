@@ -20,7 +20,8 @@ const userSchema = new mongoose.Schema(
     },
     location:
     {
-        type: String
+        type: String,
+        required: true
     }
 })
 module.exports = mongoose.model('User', userSchema)

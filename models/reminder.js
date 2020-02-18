@@ -9,6 +9,11 @@ const reminderSchema = new mongoose.Schema(
     },
     time:
     {
+        type: String,
+        required: true
+    },
+    utc_time:
+    {
         type: Number,
         required: true
     },
