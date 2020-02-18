@@ -52,6 +52,7 @@ router.post('/',checkAuthenticated, async (req,res) =>
     const time = req.body.time.split(':')
     const hour = time[0]
     const minute = time[1]
+    console.log("input time: " + req.body.time)
     weather.setCity(req.user.location)
     weather.getAllWeather(async function(err, currentWeather)
     {
