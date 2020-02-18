@@ -17,13 +17,13 @@ const nodemailer = require('nodemailer')
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'dailyping.noreply@gmail.com',
-      pass: 'hitmanr3b0rn'
+      user: process.env.EMAIL,
+      pass: process.env.Email_PASSWORD
     }
   });
 const weather = require('openweather-apis')
 weather.setLang('en')
-weather.setAPPID('c2827fcb20faeea22f693363ce34f18d')
+weather.setAPPID(process.env.OWM_API)
 weather.setUnits('metric')
 
 
