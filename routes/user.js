@@ -57,6 +57,7 @@ router.post('/',checkAuthenticated, async (req,res) =>
     {
         var utc_time = new moment('2020-02-17 ' +req.body.time+":00").utcOffset(currentWeather.timezone/3600)
         console.log(currentWeather.timezone)
+        console.log(utc_time.format())
         console.log(utc_time.utc().format())
         const hour = utc_time.utc().hours() >= 10 ? utc_time.utc().hours() : '0'+utc_time.utc().hours()
         const minute = utc_time.utc().minutes() >= 10 ? utc_time.utc().minutes() : '0'+utc_time.utc().minutes()
