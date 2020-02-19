@@ -48,36 +48,48 @@
     <div class="profile">
         <form action="/" method="POST">
             <div class="form-row"><text>*Required</text></div>
-            <div class="form-row temp-bar">
-                <div class="form-item wrap-bar" >
+            <div class="form-row">
+                <div class="form-item" >
                     <label>Message*:</label>
                     <input type="text" name="message">
                 </div>
+            </div>
+            <div class="form-row">
                 <div class="form-item">
-                    <label>Time*:</label>
+                    <label width="25%">Time*:</label>
                     <input type="time" name="time">
                 </div>
             </div>
             <div class="form-row">
             <label>Conditions: </label>
             </div>
-            <div class="form-row wrap-bar">
-                <input type="checkbox" name="rain">
-                <label for="rain">Rain</label>
-                <input type="checkbox" name="wind">
-                <label for="wind">Wind</label>
-                <input type="checkbox" name="clouds">
-                <label for="clouds">Clouds</label>
-                <input type="checkbox" name="clear">
-                <label for="clear">Clear</label>
-                <input type="checkbox" name="snow">
-                <label for="snow">Snow</label>
+            <div class="wrap-bar">
+                <div>
+                    <input type="checkbox" name="rain">
+                    <label for="rain">Rain</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="wind">
+                    <label for="wind">Wind</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="clouds">
+                    <label for="clouds">Clouds</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="clear">
+                    <label for="clear">Clear</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="snow">
+                    <label for="snow">Snow</label>
+                </div>
             </div>
-            <div class="form-row">
+            <div>
                 <input type="checkbox" name="temperature">
                 <label id="tempBox" for="temperature">Temperature: </label>
             </div>
-            <div class="form-row temp-bar">
+            <div class="form-row wrap-bar">
                 <div class="form-item">
                     <select name="temp_compare">
                         <option  value="greaterThan">Greater Than</option>
