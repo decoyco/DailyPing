@@ -139,7 +139,7 @@ async function sendReminder()
               }
             }
             if(((reminder.rain && rain) || (reminder.wind && wind) || (reminder.clouds && clouds) || (reminder.clear && clear) ||  (reminder.snow && snow) || temperatureMatch) || 
-            (!(reminder.rain && reminder.wind && reminder.clouds && reminder.clear && reminder.snow)))
+            (!(reminder.rain || reminder.wind || reminder.clouds || reminder.clear || reminder.snow)))
             {
               transporter.sendMail({
                   from: 'dailyping.noreply@gmail.com',
