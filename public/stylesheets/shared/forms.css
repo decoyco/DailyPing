@@ -65,3 +65,9 @@
 .form-item input:focus, .form-item select:focus, .form-item textarea:focus {
     border-color: hsl(var(--color-base-hue), 100%, 80%);
 }
+
+.form-checkBox {
+    width:1rem;
+    height:1rem;
+}
+
