@@ -3,6 +3,10 @@
     --form-input-border-color: var(--color-secondary-background);
     --form-input-background-color: var(--color-base-background);
 }
+.wrap-bar {
+    flex-wrap: wrap;
+    display: flex;
+}
 
 .form-row {
     display: flex;
