@@ -80,7 +80,7 @@ async function sendReminder()
         query.forEach(reminder => 
         {
           console.log("reminder found: " + reminder.message)
-          var rainy = false, windy = false, cloudy = false, clear = false, snow = false
+          var rain = false, wind = false, clouds = false, clear = false, snow = false
           var temperatureMatch = false
           var temp_greaterThan = false
           var temp_testValue = 0
@@ -102,7 +102,7 @@ async function sendReminder()
             {
               if(currentWeather.weather[0].id >= 801)
               {
-                cloudy = true
+                cloud = true
               }
               else if (currentWeather.weather[0].id == 800)
               {
@@ -114,11 +114,11 @@ async function sendReminder()
               }
               else if ((currentWeather.weather[0].id >= 500 && currentWeather.weather[0].id <= 531) || (currentWeather.weather[0].id >= 300 && currentWeather.weather[0].id <= 321) || (currentWeather.weather[0].id >= 200 || currentWeather.weather[0].id <= 232))
               {
-                rainy = true
+                rain = true
               }
               if(currentWeather.wind.speed > 11)
               {
-                windy = true
+                wind = true
               }
               if(reminder.temperature)
               {
@@ -138,7 +138,8 @@ async function sendReminder()
                 }
               }
             }
-            if((reminder.rainy && rainy) || (reminder.windy && windy) || (reminder.cloudy && cloudy) || (reminder.clear && clear) || /* (reminder.snow && snow) ||*/ temperatureMatch)
+            if(((reminder.rain && rain) || (reminder.wind && wind) || (reminder.clouds && clouds) || (reminder.clear && clear) ||  (reminder.snow && snow) || temperatureMatch) || 
+            (!(reminder.rain && reminder.wind && reminder.clouds && reminder.clear && reminder.snow)))
             {
               transporter.sendMail({
                   from: 'dailyping.noreply@gmail.com',

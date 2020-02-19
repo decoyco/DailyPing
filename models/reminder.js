@@ -21,22 +21,27 @@ const reminderSchema = new mongoose.Schema(
     {
         type: String
     },
-    rainy:
+    rain:
     {
         type: Boolean,
         required: true
     },
-    windy:
+    wind:
     {
         type: Boolean,
         required: true
     },
-    cloudy:
+    clouds:
     {
         type: Boolean,
         required: true
     },
     clear:
+    {
+        type: Boolean,
+        required: true
+    },
+    snow:
     {
         type: Boolean,
         required: true

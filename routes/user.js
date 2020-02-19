@@ -53,34 +53,28 @@ router.post('/',checkAuthenticated, async (req,res) =>
     const hour = time[0]
     const minute = time[1]
     const _time = (hour > 12 ? hour-12 : hour) + ':' + minute + (hour > 12 ? 'PM' : 'AM')
-    //console.log("input time: " + req.body.time)
     weather.setCity(req.user.location)
     weather.getAllWeather(async function(err, currentWeather)
     {
         var utc_time = new moment('2020-02-17 ' +req.body.time+":00").utcOffset(-currentWeather.timezone/3600)
-        // console.log(currentWeather.timezone)
-        // console.log(utc_time.format())
-        // console.log(utc_time.utc().format())
-        //const hour = utc_time.utc().hours() >= 10 ? utc_time.utc().hours() : '0'+utc_time.utc().hours()
-        //const minute = utc_time.utc().minutes() >= 10 ? utc_time.utc().minutes() : '0'+utc_time.utc().minutes()
-        //const _utc_time = hour + '' + minute;
         const hour = utc_time.hours() >= 10 ? utc_time.hours() : '0'+utc_time.hours()
         const minute = utc_time.minutes() >= 10 ? utc_time.minutes() : '0'+utc_time.minutes()
         const _utc_time = hour + '' + minute;
-        //console.log(_utc_time)
         const temp_compare = req.body.temp_compare == "greaterThan" ? ">" : "<"
         const _value = parseFloat(req.body.temp_value)
         const temp_value = req.body.temp_type == "F" ? (_value - 32) / 1.8 : _value
         const temperature_condition = temp_compare + ' ' + temp_value.toFixed(2)
         var conditions = ""
-        const rainy = req.body.rainy == "on" ? true : false
-        if(rainy){ conditions += "Rain, "}
-        const windy = req.body.windy == "on" ? true : false
-        if(windy) {conditions += "Wind, "}
-        const cloudy = req.body.cloudy == "on" ? true : false
-        if(cloudy) {conditions += "Clouds, "}
+        const rain = req.body.rainy == "on" ? true : false
+        if(rain){ conditions += "Rain, "}
+        const wind = req.body.wind == "on" ? true : false
+        if(wind) {conditions += "Wind, "}
+        const clouds = req.body.cloudy == "on" ? true : false
+        if(clouds) {conditions += "Clouds, "}
         const clear = req.body.clear == "on" ? true : false
         if(clear) {conditions += "Clear, "}
+        const snow = req.body.snow == "on" ? true : false
+        if(snow) {conditions += "Snow, "}
         const temperature = req.body.temperature == "on" ? true : false
         if(temperature) {conditions += "Temperature " + temp_compare + " " + req.body.temp_value + req.body.temp_type}
         const enabled = req.body.enabled == "on" ? true : false
@@ -90,10 +84,11 @@ router.post('/',checkAuthenticated, async (req,res) =>
             time: _time,
             utc_time: _utc_time,
             conditions: conditions,
-            rainy: rainy,
-            windy: windy,
-            cloudy: cloudy,
+            rainy: rain,
+            windy: wind,
+            cloudy: clouds,
             clear: clear,
+            snow: snow,
             temperature: temperature,
             temperature_condition: temperature_condition,
             enabled: enabled,
