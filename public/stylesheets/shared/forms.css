@@ -4,6 +4,7 @@
     --form-input-background-color: var(--color-base-background);
 }
 .wrap-bar {
+    max-width: 800px;
     flex-wrap: wrap;
     display: flex;
 }
