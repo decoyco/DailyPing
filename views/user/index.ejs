@@ -1,35 +1,67 @@
 <h2>Home</h2>
-<div>
-    <text>Name: <%= user.name%></text>
-    <a href="/edit">Edit Profile</a>
+<div >
+    <h3 class="profile-header">Profile</h3>
 </div>
-<div>
-    <text>Email: <%= user.email%></text>
+<div class="profile">
+    <div>
+        <label>Name: </label>
+        <text><%= user.name%></text>
+    </div>
+    <div>
+        <label>Email: </label>
+        <text><%= user.email%></text>
+    </div>
+    <div>
+        <label>Location: </label>
+        <text><%= user.location%></text>
+    </div>
 </div>
-<div>
-    <text>Location: <%= user.location != null ? user.location : "NOT YET PROVIDED"%></text>
+<div class="form-row btn-row form-row-end">
+    <a class="btn btn-primary" href="/edit">Edit Profile</a>
 </div>
+<h3 class="profile-header">Reminders:</h3>
 <div>
-    <label>Reminders:</label>
     <% reminders.forEach(reminder => { %>
-        <div>
-            <text>Message: <%= reminder.message %> </text>
-            <text>Time: <%= reminder.time%> </text>
-            <form action="/reminder/<%= reminder.id%>/enable?_method=PUT" method="POST">
-                <button type="submit"><% if(reminder.enabled) {%> Enabled <%} else { %> Disabled <%}%></button>
-            </form>
-            <form action="/reminder/<%= reminder.id%>?_method=DELETE" method="POST">
-                <button type="submit">Delete</button>
-            </form>
+        <div class="profile">
+            <div>
+                <label>Message: </label>
+                <text> <%= reminder.message %></text>
+            </div>
+            <div>
+                <label>Time: </label>
+                <text> <%= reminder.time%></text>
+            </div>
+            <div>
+                <label>Conditions: </label>
+                <text> <%= reminder.conditions%></text>
+            </div>
+            <div class="form-row btn-row form-row-end">
+                <form action="/reminder/<%= reminder.id%>/enable?_method=PUT" method="POST">
+                    <button class="btn <%if(reminder.enabled){%>btn-primary<%}else{%>btn-danger<%}%>" type="submit"><% if(reminder.enabled) {%> Enabled <%} else { %> Disabled <%}%></button>
+                </form>
+                <form action="/reminder/<%= reminder.id%>?_method=DELETE" method="POST">
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                </form>
+            </div>
         </div>
     <%})%>
-    <div>
+    <div class="profile">
         <form action="/" method="POST">
-            <label>Message:</label>
-            <input type="text" name="message">
-            <label>Time:</label>
-            <input type="time" name="time">
-            <label>Conditions</label>
+            <div class="form-row"><text>*Required</text></div>
+            <div class="form-row temp-bar">
+                <div class="form-item" >
+                    <label>Message*:</label>
+                    <input type="text" name="message">
+                </div>
+                <div class="form-item">
+                    <label>Time*:</label>
+                    <input type="time" name="time">
+                </div>
+            </div>
+            <div class="form-row">
+            <label>Conditions: </label>
+            </div>
+            <div class="form-row">
                 <input type="checkbox" name="rainy">
                 <label for="rainy">Rainy</label>
                 <input type="checkbox" name="windy">
@@ -38,23 +70,36 @@
                 <label for="cloudy">Cloudy</label>
                 <input type="checkbox" name="clear">
                 <label for="clear">Clear</label>
+            </div>
+            <div class="form-row">
                 <input type="checkbox" name="temperature">
-                <label id="tempBox" for="temperature">Temperature</label>
-                    <div id="tempOptions">
-                        <select name="temp_compare">
-                            <option  value="greaterThan">Greater Than</option>
-                            <option  value="lessThan">Less Than</option>
-                        </select>
-                        <input type="number" name="temp_value">
-                        <select name="temp_type">
-                            <option  value="F">F</option>
-                            <option  value="C">C</option>
-                        </select>
-                    </div>
-            <input type="checkbox" name="enabled">
-            <label for="enabled">Enabled</label>
-            <button type="submit">Add</button>
+                <label id="tempBox" for="temperature">Temperature: </label>
+            </div>
+            <div class="form-row temp-bar">
+                <div class="form-item">
+                    <select name="temp_compare">
+                        <option  value="greaterThan">Greater Than</option>
+                        <option  value="lessThan">Less Than</option>
+                    </select>
+                </div>
+                <div class="form-item">
+                    <input type="number" name="temp_value">
+                </div>
+                <div class="form-item">
+                    <select name="temp_type">
+                        <option  value="F">F</option>
+                        <option  value="C">C</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <input type="checkbox" name="enabled">
+                <label for="enabled">Enabled</label>
+            </div>
+            <div class="form-row btn-row form-row-end">
+                <button class="btn btn-primary" type="submit">Add</button>
+            </div>
         </form>
     </div>
 </div>
-<%- include('../partials/footer') %>
+<div class="form-row btn-row form-row-end"><%- include('../partials/footer') %></div>

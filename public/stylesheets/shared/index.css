@@ -1,0 +1,24 @@
+.profile-header {
+    margin-bottom: 0;
+}
+.profile {
+    background-color: var(--color-secondary-background);
+    color: var(--color-text-light);
+    padding: 0.25rem 0.25rem;
+    border-radius: 0.5rem;
+    margin-top: 0rem;
+    margin-bottom: .25rem;
+}
+
+.profile div {
+    margin: 0.5rem 0.5rem;
+}
+
+.profile div label {
+    font-weight: bold;
+}
+
+.temp-bar {
+    flex-wrap: wrap;
+    display: flex;
+}

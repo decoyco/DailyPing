@@ -17,6 +17,10 @@ const reminderSchema = new mongoose.Schema(
         type: Number,
         required: true
     },
+    conditions:
+    {
+        type: String
+    },
     rainy:
     {
         type: Boolean,
