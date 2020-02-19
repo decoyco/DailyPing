@@ -65,7 +65,7 @@ router.post('/',checkAuthenticated, async (req,res) =>
         const temp_value = req.body.temp_type == "F" ? (_value - 32) / 1.8 : _value
         const temperature_condition = temp_compare + ' ' + temp_value.toFixed(2)
         var conditions = ""
-        const rain = req.body.rainy == "on" ? true : false
+        const rain = req.body.rain == "on" ? true : false
         if(rain){ conditions += "Rain, "}
         const wind = req.body.wind == "on" ? true : false
         if(wind) {conditions += "Wind, "}
@@ -84,9 +84,9 @@ router.post('/',checkAuthenticated, async (req,res) =>
             time: _time,
             utc_time: _utc_time,
             conditions: conditions,
-            rainy: rain,
-            windy: wind,
-            cloudy: clouds,
+            rain: rain,
+            wind: wind,
+            clouds: clouds,
             clear: clear,
             snow: snow,
             temperature: temperature,
